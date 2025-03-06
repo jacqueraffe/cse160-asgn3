@@ -12,11 +12,27 @@
     <p>
     
       <p id = "numdot"> XXX </p>
-
+    <p>
+      Reset Cow:
+      <button type = "button" id = "resetCowButton">RESET</button>
+    </p>
     Animation:
     <button type = "button" id = "animationYellowOnButton">ON</button>
     <button type = "button" id = "animationYellowOffButton">OFF</button>
-
+    <p>
+      Pronk <input type = "range" min = "0" max = "70" value = "0" class = "slider" id = "hopSlide">
+    <p>
+    <p>
+      Head Rotation <input type = "range" min = "-45" max = "45" value = "0" class = "slider" id = "headRotationSlide">
+    </p>
+    
+    <p>
+      First Tail Joint Rotation <input type = "range" min = "0" max = "90" value = "0" class = "slider" id = "firstTailJointRotationSlide">
+    </p>
+    
+    <p>
+      Second Tail Joint Rotation <input type = "range" min = "0" max = "90" value = "0" class = "slider" id = "secondTailJointRotationSlide">
+    </p>
     
       Camera Angle <input type = "range" min = "0" max = "360" value = "0" class = "slider" id = "angleSlide">
     </p>
@@ -27,8 +43,11 @@
     <script src="lib/cuon-matrix.js"></script>
     
     <script src="src/Triangle.js"></script>
+    <script src="src/Box.js"></script>
+    <script src="src/Sphere.js"></script>
     <script src="src/Cube.js"></script>
-    <script src="src/asgn3.js"></script>
+    <script src="src/Cone.js"></script>
+    <script src="src/asgn2.js"></script>
 
   </body>
 </html>
