@@ -24,7 +24,8 @@ var VSHADER_SOURCE =`
   uniform mat4 u_ProjectionMatrix;
   void main() {
     //gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix*a_Position;
-    gl_Position = u_GlobalRotateMatrix * u_ModelMatrix*a_Position;
+        gl_Position =  u_GlobalRotateMatrix * u_ModelMatrix*a_Position;
+
     v_UV = a_UV;
   }`
 
@@ -35,7 +36,7 @@ var FSHADER_SOURCE =`
   uniform vec4 u_FragColor;
   void main() {
     gl_FragColor = u_FragColor;
-    //gl_FragColor = vec4(v_UV, 1.0,1.0);
+    gl_FragColor = vec4(v_UV, 1.0,1.0);
   }`
   
 //Global Vars
