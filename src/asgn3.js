@@ -141,14 +141,11 @@ function renderAllShapes(){
   gl.cullFace(gl.BACK);
   gl.enable(gl.DEPTH_TEST);
   
-  var body = new Box(0.5, 0.3, 0.25);
+  var body = new Cube();
   body.color = [170/256, 100/256, 50/256, 1.0];
+  body.matrix.scale(0.1, 0.1, 0.1, 0.1);
   body.matrix.rotate(-20, 1, 35, 1);
-  body.matrix.rotate(g_modelAngleX, 1, 0, 0);
-  body.matrix.rotate(g_modelAngleY, 0, 1, 0);
   body.matrix.translate(0, -0.35, 0, 0);
-  body.matrix.translate(g_jumpX, g_jumpHeight/3, 0, 0);
-  var base = new Matrix4(body.matrix);
   body.render();
 }
 
