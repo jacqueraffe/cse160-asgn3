@@ -49,6 +49,7 @@ let a_UV;
 let u_FragColor;
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
+let u_Sampler0;
 // let u_ProjectionMatrix;
 // let u_ViewMatrix;
 
@@ -115,12 +116,18 @@ function connectVariablesToGLSL(){
   //   return;
   // }
   
-  
   u_GlobalRotateMatrix = gl.getUniformLocation(gl.program, 'u_GlobalRotateMatrix');
   if (!u_GlobalRotateMatrix) {
     console.log('Failed to get the storage location of u_GlobalRotateMatrix');
     return;
   }
+  
+    // Get the storage location of u_Sampler
+    var u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+    if (!u_Sampler0) {
+        console.log('Failed to get the storage location of u_Sampler0');
+        return false;
+    }
   
   var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
@@ -142,12 +149,7 @@ function initTextures(gl, n){
       return false;
   }
 
-  // Get the storage location of u_Sampler
-  var u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
-  if (!u_Sampler0) {
-      console.log('Failed to get the storage location of u_Sampler0');
-      return false;
-  }
+
   var image = new Image();  // Create the image object
   if (!image) {
       console.log('Failed to create the image object');
@@ -172,9 +174,9 @@ function loadTexture(gl, n, texture, u_sampler, image){
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
   // Set the texture unit 0 to the sampler
-  gl.uniform1i(u_sampler, 0);
+  // gl.uniform1i(u_sampler, 0);
 
-  gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
+  // gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
 }
