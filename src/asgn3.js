@@ -189,11 +189,15 @@ function main() {
 }
 
 function tick() {
+  g_camera.move(); // Update camera position based on keys
+  g_camera.updateViewMatrix();
   //g_seconds = performance.now()/1000.0-g_startTime;
   renderAllShapes();
   requestAnimationFrame(tick);
 }
 
+var g_camera = new Camera();
+g_camera.updateViewMatrix();
 
 function renderAllShapes(){
   // Clear <canvas>
@@ -203,8 +207,7 @@ function renderAllShapes(){
   projMat.setPerspective(30, canvas.width/canvas.height, 0.1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
   
-  var viewMat = new Matrix4();
-  viewMat.setLookAt(0,1,-5, 0,1,0, 0,1,0);
+  var viewMat = g_camera.viewMatrix;
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
   
   var globalRotMat  = new Matrix4().rotate(g_globalAngle,0,1,0);
