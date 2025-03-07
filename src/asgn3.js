@@ -38,7 +38,7 @@ var FSHADER_SOURCE =`
   void main() {
     gl_FragColor = u_FragColor;
     gl_FragColor = vec4(v_UV, 1.0,1.0);
-    gl_FragColor = texture2D(u_Sampler0; v_UV);
+    gl_FragColor = texture2D(u_Sampler0, v_UV);
   }`
   
 //Global Vars
@@ -143,9 +143,9 @@ function initTextures(gl, n){
   }
 
   // Get the storage location of u_Sampler
-  var u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler');
-  if (!u_Sampler) {
-      console.log('Failed to get the storage location of u_Sampler');
+  var u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+  if (!u_Sampler0) {
+      console.log('Failed to get the storage location of u_Sampler0');
       return false;
   }
   var image = new Image();  // Create the image object
@@ -154,7 +154,7 @@ function initTextures(gl, n){
       return false;
   }
   // Register the event handler to be called on loading an image
-  image.onload = function(){ loadTexture(gl, n, texture, u_Sampler, image); };
+  image.onload = function(){ loadTexture(gl, n, texture, u_Sampler0, image); };
   // Tell the browser to load an image
   image.src = 'sky.jpg';
 
