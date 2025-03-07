@@ -85,12 +85,6 @@ function connectVariablesToGLSL(){
     return;
   }
   
-  a_UV = gl.getAttribLocation(gl.program, 'a_UV');
-  if (a_UV < 0) {
-    console.log('Failed to get the storage location of a_UV');
-    return;
-  }
-
   // Get the storage location of u_FragColor
  u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
   if (!u_FragColor) {
@@ -122,12 +116,12 @@ function connectVariablesToGLSL(){
     return;
   }
   
-    // Get the storage location of u_Sampler
-    var u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
-    if (!u_Sampler0) {
-        console.log('Failed to get the storage location of u_Sampler0');
-        return false;
-    }
+  // Get the storage location of u_Sampler
+  u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+  if (!u_Sampler0) {
+      console.log('Failed to get the storage location of u_Sampler0');
+      return false;
+  }
   
   var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
@@ -140,30 +134,26 @@ function addActionForHtmlUI(){
   document.getElementById("angleSlide").addEventListener("mousemove", function() {g_globalAngle = this.value; renderAllShapes(); });
 }
 
-
-
-function initTextures(gl, n){
-  var texture = gl.createTexture();
-  if (!texture) {
-      console.log('Failed to create the texture object');
-      return false;
-  }
-
-
+function initTextures(){
   var image = new Image();  // Create the image object
   if (!image) {
       console.log('Failed to create the image object');
       return false;
   }
   // Register the event handler to be called on loading an image
-  image.onload = function(){ loadTexture(gl, n, texture, u_Sampler0, image); };
+  image.onload = function(){ loadTexture(0, u_Sampler0, image); };
   // Tell the browser to load an image
   image.src = 'sky.jpg';
 
   return true;
 }
 
-function loadTexture(gl, n, texture, u_sampler, image){
+function loadTexture(n, u_sampler, image){
+  var texture = gl.createTexture();
+  if (!texture) {
+      console.log('Failed to create the texture object');
+      return false;
+  }
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -174,9 +164,6 @@ function loadTexture(gl, n, texture, u_sampler, image){
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
   // Set the texture unit 0 to the sampler
-  // gl.uniform1i(u_sampler, 0);
-
-  // gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
 }
@@ -185,7 +172,7 @@ function main() {
   setupWebGL();  
   connectVariablesToGLSL();
   addActionForHtmlUI();
-  initTextures(gl, 0);
+  initTextures();
   requestAnimationFrame(tick);
 }
 
