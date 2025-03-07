@@ -220,6 +220,22 @@ function renderAllShapes(){
   //gl.cullFace(gl.BACK);
   gl.enable(gl.DEPTH_TEST);
   
+  var floor = new Cube();
+  floor.color = [10/256, 200/255, 10/255, 1.0];
+  floor.matrix.translate(0, -0.75, 0);
+  floor.matrix.scale(10,0.1,10);
+  floor.matrix.translate(-0.5, 0, -0.5);
+  floor.textureNum = -2;
+  floor.render();
+  
+  var sky = new Cube();
+  sky.color = [10/256, 10/255, 100/255, 1.0];
+  sky.matrix.translate(0, -0.75, 0);
+  sky.matrix.scale(50,50,50);
+  sky.matrix.translate(-0.5, -0.5, -0.5);
+  sky.textureNum = 0;
+  sky.render();
+  
   var body = new Cube();
   body.textureNum = 0;
   body.matrix.scale(0.5, 0.5, 0.3);
