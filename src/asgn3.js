@@ -35,10 +35,17 @@ var FSHADER_SOURCE =`
   varying vec2 v_UV;
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler0;
+  uniform int u_whichTexture;
   void main() {
+  if (u_whichTexture == -2){
     gl_FragColor = u_FragColor;
+} else if (u_whichTexture == -1){
     gl_FragColor = vec4(v_UV, 1.0,1.0);
+    } else if (u_whichTexture == 0){
     gl_FragColor = texture2D(u_Sampler0, v_UV);
+} else {
+ gl_FragColor = vec4(1,0.2,0.2,1);
+ }
   }`
   
 //Global Vars
@@ -85,6 +92,18 @@ function connectVariablesToGLSL(){
     return;
   }
   
+   u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+   if (!u_Sampler0) {
+       console.log('Failed to get the storage location of u_Sampler0');
+       return false;
+   }
+  
+  u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
+ if (!u_whichTexture) {
+   console.log('Failed to get the storage location of u_whichTexture');
+   return;
+ }
+  
   // Get the storage location of u_FragColor
  u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
   if (!u_FragColor) {
@@ -116,13 +135,6 @@ function connectVariablesToGLSL(){
     return;
   }
   
-  // Get the storage location of u_Sampler
-  u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
-  if (!u_Sampler0) {
-      console.log('Failed to get the storage location of u_Sampler0');
-      return false;
-  }
-  
   var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
   
@@ -141,14 +153,14 @@ function initTextures(){
       return false;
   }
   // Register the event handler to be called on loading an image
-  image.onload = function(){ loadTexture(0, u_Sampler0, image); };
+  image.onload = function(){ sendTextureToGLSL(0, u_Sampler0, image); };
   // Tell the browser to load an image
   image.src = 'sky.jpg';
 
   return true;
 }
 
-function loadTexture(n, u_sampler, image){
+function sendTextureToGLSL(n, u_sampler, image){
   var texture = gl.createTexture();
   if (!texture) {
       console.log('Failed to create the texture object');
@@ -198,9 +210,17 @@ function renderAllShapes(){
   gl.enable(gl.DEPTH_TEST);
   
   var body = new Cube();
+  body.textureNum = 0;
   body.matrix.scale(0.5, 0.5, 0.3);
   body.color = [170/256, 100/256, 50/256, 1.0];
   body.render();
+  
+  var body2 = new Cube();
+  body2.textureNum = -1;
+  body2.matrix.translate(0.5, 0.4, 0.2);
+  body2.matrix.scale(0.4, 0.4, 0.2);
+  body2.color = [170/256, 100/256, 50/256, 1.0];
+  body2.render();
 
   var duration = performance.now() - startTime;
   sendTextToHTML( " ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
