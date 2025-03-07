@@ -200,9 +200,11 @@ function renderAllShapes(){
   var startTime = performance.now();
   
   var projMat = new Matrix4();
+  projMat.setPerspective(30, canvas.width/canvas.height, 0.1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
   
   var viewMat = new Matrix4();
+  viewMat.setLookAt(0,1,-5, 0,1,0, 0,1,0);
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
   
   var globalRotMat  = new Matrix4().rotate(g_globalAngle,0,1,0);
@@ -211,8 +213,8 @@ function renderAllShapes(){
   gl.clearColor(0,0,0,1);
   gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
   
-  gl.enable(gl.CULL_FACE);
-  gl.cullFace(gl.BACK);
+  //gl.enable(gl.CULL_FACE);
+  //gl.cullFace(gl.BACK);
   gl.enable(gl.DEPTH_TEST);
   
   var body = new Cube();
