@@ -66,9 +66,9 @@ function drawTriangle3DUV(vertices, uv) {
         initTriangle3DUV();
     }
     gl.bindBuffer(gl.ARRAY_BUFFER, g_vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, g_uvBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, uv, gl.DYNAMIC_DRAW);
     gl.drawArrays(gl.TRIANGLES, 0, n);
 
  }

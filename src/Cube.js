@@ -5,7 +5,7 @@ class Cube {
        this.matrix = new Matrix4();
        this.textureNum = 0;
     
-       this.cubeVertsXYZ = [
+       this.cubeVertsXYZ = new Float32Array([
         // xy0 face
         0.0, 0.0, 0.0,   1.0, 1.0, 0.0,   0.0, 1.0, 0.0,
         0.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 1.0, 0.0,
@@ -24,9 +24,9 @@ class Cube {
         // x1z face
         0.0, 1.0, 1.0,   0.0, 1.0, 0.0,   1.0, 1.0, 1.0,
         1.0, 1.0, 1.0,   0.0, 1.0, 0.0,   1.0, 1.0, 0.0
-       ];
+       ]);
        
-       this.cubeVertsUV = [
+       this.cubeVertsUV = new Float32Array([
         // xy0 face
         0,0,1,1,0,1,
         0,0,1,0,1,1,
@@ -45,7 +45,7 @@ class Cube {
         // x1z face
         0,1,0,0,1,1,
         1,1,0,0,1,0
-       ];
+       ]);
    }
 
    render() {
