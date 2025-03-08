@@ -4,13 +4,12 @@
 // Student email: japalevi@ucsc.edu
 // 
 
-
 // NOTE FOR GRADER:
 // # cse160-asgn1
 // heavily referenced video playlist. and used Gemini
 
-// Awesomeness:
-// shift click to jump over the moon
+// Wow!
+// Mine Maze: Try to find all the diamonds in the maze in the shortest time possible!
 
 
 var VSHADER_SOURCE =`
