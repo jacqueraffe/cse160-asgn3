@@ -58,6 +58,7 @@ let u_GlobalRotateMatrix;
 let u_Sampler0;
 let u_ProjectionMatrix;
 let u_ViewMatrix;
+let g_camera;
 
 function setupWebGL(){
     // Retrieve <canvas> element
@@ -69,6 +70,8 @@ function setupWebGL(){
       console.log('Failed to get the rendering context for WebGL');
       return;
     }
+    g_camera = new Camera(canvas);
+    g_camera.updateViewMatrix();
 }
 
 function connectVariablesToGLSL(){
@@ -194,9 +197,6 @@ function tick() {
   renderAllShapes();
   requestAnimationFrame(tick);
 }
-
-var g_camera = new Camera();
-g_camera.updateViewMatrix();
   
 var map = [
   [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],  
