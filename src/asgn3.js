@@ -59,6 +59,8 @@ let u_Sampler0;
 let u_ProjectionMatrix;
 let u_ViewMatrix;
 let g_camera;
+let g_seconds;
+let g_startTime = performance.now()/1000.0;
 
 function setupWebGL(){
     // Retrieve <canvas> element
@@ -193,10 +195,11 @@ function main() {
   requestAnimationFrame(tick);
 }
 
+
 function tick() {
   g_camera.move(); // Update camera position based on keys
   g_camera.updateViewMatrix();
-  //g_seconds = performance.now()/1000.0-g_startTime;
+  g_seconds = performance.now()/1000.0-g_startTime;
   renderAllShapes();
   requestAnimationFrame(tick);
 }
@@ -294,8 +297,11 @@ function renderAllShapes(){
   
   var diamond = new Diamond();
   diamond.color = [170/256, 210/255, 229/255, 1.0];
-  diamond.matrix.translate(3, 2, 3);
   diamond.textureNum = -2;
+  diamond.matrix.setIdentity();
+  diamond.matrix.translate(3, 2, 3);
+  diamond.matrix.rotate(g_seconds*30, 0, 1, 0);
+  diamond.matrix.translate(0, (Math.cos(g_seconds*Math.PI))*0.2, 0);
   diamond.renderFast();
 
   var duration = performance.now() - startTime;
