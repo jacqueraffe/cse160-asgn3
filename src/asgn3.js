@@ -209,7 +209,7 @@ g_camera.updateViewMatrix();
           body.matrix.translate(0,-.75,0);
           body.matrix.scale(.3,.3,.3);
           body.matrix.translate(x-16, 0, y-16);
-          body.render();
+          body.renderFast();
         }
       }
     }
@@ -242,7 +242,7 @@ function renderAllShapes(){
   floor.matrix.scale(10,0.1,10);
   floor.matrix.translate(-0.5, 0, -0.5);
   floor.textureNum = -2;
-  floor.render();
+  floor.renderFast();
   
   var sky = new Cube();
   sky.color = [10/256, 10/255, 100/255, 1.0];
@@ -250,20 +250,20 @@ function renderAllShapes(){
   sky.matrix.scale(50,50,50);
   sky.matrix.translate(-0.5, -0.5, -0.5);
   sky.textureNum = 0;
-  sky.render();
+  sky.renderFast();
   
   var body = new Cube();
   body.textureNum = 0;
   body.matrix.scale(0.5, 0.5, 0.3);
   body.color = [170/256, 100/256, 50/256, 1.0];
-  body.render();
+  body.renderFast();
   
   var body2 = new Cube();
   body2.textureNum = -1;
   body2.matrix.translate(0.5, 0.4, 0.2);
   body2.matrix.scale(0.4, 0.4, 0.2);
   body2.color = [170/256, 100/256, 50/256, 1.0];
-  body2.render();
+  body2.renderFast();
 
   var duration = performance.now() - startTime;
   sendTextToHTML( " ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
