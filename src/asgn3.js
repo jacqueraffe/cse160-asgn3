@@ -5,7 +5,7 @@
 // 
 
 // NOTE FOR GRADER:
-// # cse160-asgn1
+// # cse160-asgn3
 // heavily referenced video playlist. and used Gemini
 
 // Wow!
