@@ -291,6 +291,12 @@ function renderAllShapes(){
   sky.textureNum = 0;
   gl.bindTexture(gl.TEXTURE_2D, g_skyTexture);
   sky.renderFast();
+  
+  var diamond = new Diamond();
+  diamond.color = [170/256, 210/255, 229/255, 1.0];
+  diamond.matrix.translate(3, 2, 3);
+  diamond.textureNum = -2;
+  diamond.renderFast();
 
   var duration = performance.now() - startTime;
   sendTextToHTML( " ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
