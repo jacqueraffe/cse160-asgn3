@@ -178,7 +178,7 @@ function textureHelper(fileName){
 function sendTextureToGLSL(image, texture){
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, g_skyTexture);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 }
@@ -235,6 +235,7 @@ var map = [
 ];
 
 function drawMap(map) {
+    gl.bindTexture(gl.TEXTURE_2D, g_wallTexture);
     var height = map.length;
     var width = map[0].length;
     var body = new Cube();
@@ -277,6 +278,7 @@ function renderAllShapes(){
   floor.matrix.scale(32, 0.01, 32);
   floor.matrix.translate(-0.5, 0, -0.5);
   floor.textureNum = 0;
+  gl.bindTexture(gl.TEXTURE_2D, g_groundTexture);
   floor.renderFast();
   
   var sky = new Cube();
@@ -285,6 +287,7 @@ function renderAllShapes(){
   sky.matrix.scale(50,50,50);
   sky.matrix.translate(-0.5, -0.5, -0.5);
   sky.textureNum = 0;
+  gl.bindTexture(gl.TEXTURE_2D, g_skyTexture);
   sky.renderFast();
 
   var duration = performance.now() - startTime;
