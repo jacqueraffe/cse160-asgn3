@@ -148,38 +148,39 @@ function addActionForHtmlUI(){
   document.getElementById("angleSlide").addEventListener("mousemove", function() {g_globalAngle = this.value; renderAllShapes(); });
 }
 
-function initTextures(){
-  var image = new Image();  // Create the image object
-  if (!image) {
-      console.log('Failed to create the image object');
-      return false;
-  }
-  // Register the event handler to be called on loading an image
-  image.onload = function(){ sendTextureToGLSL(0, u_Sampler0, image); };
-  // Tell the browser to load an image
-  image.src = 'sky.jpg';
+var g_skyTexture;
+var g_groundTexture;
+var g_wallTexture;
 
+function initTextures(){
+  g_skyTexture = textureHelper("sky.jpg");
+  g_groundTexture = textureHelper("ground.jpeg");
+  g_wallTexture = textureHelper("wall.jpeg");
   return true;
 }
 
-function sendTextureToGLSL(n, u_sampler, image){
+function textureHelper(fileName){
+  var image = new Image();  // Create the image object
+  if (!image) {
+      console.log('Failed to create the image object');
+      return null;
+  }
   var texture = gl.createTexture();
   if (!texture) {
       console.log('Failed to create the texture object');
-      return false;
+      return null;
   }
+  image.onload = function(){ sendTextureToGLSL(image, texture); };
+  image.src = fileName;
+  return texture;
+}
+
+function sendTextureToGLSL(image, texture){
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-
-  // Set the texture parameters
+  gl.bindTexture(gl.TEXTURE_2D, g_skyTexture);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  // Set the texture image
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-
-  // Set the texture unit 0 to the sampler
-
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
 }
 
 function main() {
@@ -275,7 +276,7 @@ function renderAllShapes(){
   floor.color = [10/256, 200/255, 10/255, 1.0];
   floor.matrix.scale(32, 0.01, 32);
   floor.matrix.translate(-0.5, 0, -0.5);
-  floor.textureNum = -2;
+  floor.textureNum = 0;
   floor.renderFast();
   
   var sky = new Cube();
