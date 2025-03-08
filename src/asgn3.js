@@ -200,16 +200,17 @@ var g_camera = new Camera();
 g_camera.updateViewMatrix();
   
   function drawMap() {
+    var body = new Cube();
+    body.color = [0.8,1.0,1.0,1.0];
+    body.matrix.translate(0,-.75,0);
+    body.matrix.scale(.3,.3,.3);
+    body.matrix.translate(-16, 0, -16);
     for (x=0;x<32;x++){
       for (y=0;y<32;y++){
-        //console.log(x,y);
         if ((x==0 || x==31 || y==0 || y==31)){
-          var body = new Cube();
-          body.color = [0.8,1.0,1.0,1.0];
-          body.matrix.translate(0,-.75,0);
-          body.matrix.scale(.3,.3,.3);
-          body.matrix.translate(x-16, 0, y-16);
+          body.matrix.translate(x, 0, y);
           body.renderFast();
+          body.matrix.translate(-x, 0, -y);
         }
       }
     }
