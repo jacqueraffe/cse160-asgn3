@@ -306,6 +306,8 @@ function renderAllShapes(){
 
   var duration = performance.now() - startTime;
   sendTextToHTML( " ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
+  sendTextToHTML( " x: " + g_camera.target.elements[0] + " z: " + g_camera.target.elements[2], "xz");
+  
 
 }
 
