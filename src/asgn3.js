@@ -216,11 +216,11 @@ var map = [
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
@@ -239,8 +239,6 @@ function drawMap(map) {
     var width = map[0].length;
     var body = new Cube();
     body.color = [0.8,1.0,1.0,1.0];
-    body.matrix.translate(0,-.75,0);
-    body.matrix.scale(.3,.3,.3);
     body.matrix.translate(-height/2, 0, -width/2);
     var n = 0;
     for (var x=0; x<width; x++){
@@ -257,7 +255,6 @@ function drawMap(map) {
 function renderAllShapes(){
   // Clear <canvas>
   var startTime = performance.now();
-  
   var projMat = new Matrix4();
   projMat.setPerspective(30, canvas.width/canvas.height, 0.1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
@@ -277,9 +274,7 @@ function renderAllShapes(){
   drawMap(map);
   var floor = new Cube();
   floor.color = [10/256, 200/255, 10/255, 1.0];
-  floor.matrix.translate(0, -0.75, 0);
-  floor.matrix.scale(10,0.1,10);
-  floor.matrix.translate(-0.5, 0, -0.5);
+  
   floor.textureNum = -2;
   floor.renderFast();
   
@@ -290,19 +285,6 @@ function renderAllShapes(){
   sky.matrix.translate(-0.5, -0.5, -0.5);
   sky.textureNum = 0;
   sky.renderFast();
-  
-  var body = new Cube();
-  body.textureNum = 0;
-  body.matrix.scale(0.5, 0.5, 0.3);
-  body.color = [170/256, 100/256, 50/256, 1.0];
-  body.renderFast();
-  
-  var body2 = new Cube();
-  body2.textureNum = -1;
-  body2.matrix.translate(0.5, 0.4, 0.2);
-  body2.matrix.scale(0.4, 0.4, 0.2);
-  body2.color = [170/256, 100/256, 50/256, 1.0];
-  body2.renderFast();
 
   var duration = performance.now() - startTime;
   sendTextToHTML( " ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
