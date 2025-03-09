@@ -20,8 +20,8 @@ var VSHADER_SOURCE =`
   varying vec2 v_UV;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
-  // uniform mat4 u_ViewMatrix;
-  // uniform mat4 u_ProjectionMatrix;
+  uniform mat4 u_ViewMatrix;
+  uniform mat4 u_ProjectionMatrix;
   void main() {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix*a_Position;
     //gl_Position =  u_GlobalRotateMatrix * u_ModelMatrix*a_Position;
@@ -128,11 +128,11 @@ function connectVariablesToGLSL(){
     return;
   }
   
-  // u_ProjectionMatrix = gl.getUniformLocation(gl.program, 'u_ProjectionMatrix');
-  // if (!u_ProjectionMatrix) {
-  //   console.log('Failed to get the storage location of u_ProjectionMatrix');
-  //   return;
-  // }
+  u_ProjectionMatrix = gl.getUniformLocation(gl.program, 'u_ProjectionMatrix');
+  if (!u_ProjectionMatrix) {
+    console.log('Failed to get the storage location of u_ProjectionMatrix');
+    return;
+  }
   
   u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
   if (!u_ViewMatrix) {
