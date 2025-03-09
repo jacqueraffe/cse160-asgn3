@@ -181,7 +181,8 @@ var g_map = [
   [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],  
 ];
 
-var g_diamonds = [[3,3], [3,6]];
+// x, z
+var g_diamonds = [];
 
 function addActionForHtmlUI(){
   document.getElementById('addBlock').onclick = function() {updateBlock(true, g_map);};
@@ -280,7 +281,6 @@ function drawDiamonds(diamonds) {
   }
 }
 
-
 function drawMap(map) {
     gl.bindTexture(gl.TEXTURE_2D, g_wallTexture);
     var height = map.length;
@@ -298,7 +298,19 @@ function drawMap(map) {
         }
       }
     }
+}
+function collectDiamonds(){
+  x = Math.floor(g_camera.eye.elements[0]);
+  z = Math.floor(g_camera.eye.elements[2]);
+  for(var i = 0; i < g_diamonds.length; i++){
+    if (g_diamonds[i][0] == x && g_diamonds[i][1] == z){
+      g_score +=1
+      g_diamonds.splice(i, 1);
+      return;
+    }
   }
+}
+  
   
 function renderAllShapes(){
   // Clear <canvas>
@@ -344,6 +356,8 @@ function renderAllShapes(){
       g_diamonds = g_diamonds.concat([[y-16,x-16]]);
     }
   }
+  
+  collectDiamonds();
   
   drawDiamonds(g_diamonds);
 
