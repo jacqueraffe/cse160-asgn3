@@ -144,6 +144,7 @@ function connectVariablesToGLSL(){
   
 }
 
+let g_score = 0;
 let g_globalAngle = 0;
 var g_map = [
   [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],  
@@ -202,7 +203,6 @@ function updateBlock(adding, map){
     }
     map[z][x] -= 1;
   }
-  
 }
 
 var g_skyTexture;
@@ -258,6 +258,12 @@ function tick() {
   renderAllShapes();
   requestAnimationFrame(tick);
 }
+
+/*
+// TODO:
+1. pick diamonds have them randomly generate (have counter of how many diamonds u have on html)
+2. maze gernation
+*/
 
 
 function drawDiamonds(diamonds) {
@@ -331,14 +337,21 @@ function renderAllShapes(){
   gl.bindTexture(gl.TEXTURE_2D, g_skyTexture);
   sky.renderFast();
   
+  if (g_diamonds.length < 30){
+    var x = Math.floor(Math.random() * (32));
+    var y = Math.floor(Math.random() * (32));
+    if (g_map[y][x] == 0){
+      g_diamonds = g_diamonds.concat([[y-16,x-16]]);
+    }
+  }
+  
   drawDiamonds(g_diamonds);
 
   var duration = performance.now() - startTime;
+  sendTextToHTML( " Diamonds collected: " + g_score, "score");
   sendTextToHTML( " ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
   sendTextToHTML( "target x: " + g_camera.target.elements[0] + " z: " + g_camera.target.elements[2], "targetXZ");
   sendTextToHTML( "eye x: " + g_camera.eye.elements[0] + " z: " + g_camera.eye.elements[2], "eyeXZ");
-
-
 }
 
 function sendTextToHTML(text, htmlID){
