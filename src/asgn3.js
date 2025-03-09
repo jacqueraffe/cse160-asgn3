@@ -72,7 +72,7 @@ function setupWebGL(){
       console.log('Failed to get the rendering context for WebGL');
       return;
     }
-    g_camera = new Camera(canvas);
+    g_camera = new Camera(canvas, g_map);
     g_camera.updateViewMatrix();
 }
 
@@ -145,7 +145,7 @@ function connectVariablesToGLSL(){
 }
 
 let g_globalAngle = 0;
-var map = [
+var g_map = [
   [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],  
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
@@ -159,10 +159,10 @@ var map = [
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
   [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
@@ -180,9 +180,11 @@ var map = [
   [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],  
 ];
 
+var g_diamonds = [[3,3], [3,6]];
+
 function addActionForHtmlUI(){
-  document.getElementById('addBlock').onclick = function() {updateBlock(true, map);};
-  document.getElementById('removeBlock').onclick = function() {updateBlock(false, map);};
+  document.getElementById('addBlock').onclick = function() {updateBlock(true, g_map);};
+  document.getElementById('removeBlock').onclick = function() {updateBlock(false, g_map);};
   document.getElementById("angleSlide").addEventListener("mousemove", function() {g_globalAngle = this.value; renderAllShapes(); });
 }
 
@@ -256,7 +258,21 @@ function tick() {
   renderAllShapes();
   requestAnimationFrame(tick);
 }
-  
+
+
+function drawDiamonds(diamonds) {
+  var diamond = new Diamond();
+  diamond.color = [170/256, 210/255, 229/255, 1.0];
+  diamond.textureNum = -2;
+  var n = 0;
+  for (var d=0; d<diamonds.length; d++){
+    diamond.matrix.setIdentity();
+    diamond.matrix.translate(diamonds[d][0], 2, diamonds[d][1]);
+    diamond.matrix.rotate(g_seconds*30, 0, 1, 0);
+    diamond.matrix.translate(0, (Math.cos(g_seconds*Math.PI))*0.2, 0);
+    diamond.renderFast();
+  }
+}
 
 
 function drawMap(map) {
@@ -297,7 +313,7 @@ function renderAllShapes(){
   //gl.enable(gl.CULL_FACE);
   //gl.cullFace(gl.BACK);
   gl.enable(gl.DEPTH_TEST);
-  drawMap(map);
+  drawMap(g_map);
   var floor = new Cube();
   floor.color = [10/256, 200/255, 10/255, 1.0];
   floor.matrix.scale(32, 0.01, 32);
@@ -315,14 +331,7 @@ function renderAllShapes(){
   gl.bindTexture(gl.TEXTURE_2D, g_skyTexture);
   sky.renderFast();
   
-  var diamond = new Diamond();
-  diamond.color = [170/256, 210/255, 229/255, 1.0];
-  diamond.textureNum = -2;
-  diamond.matrix.setIdentity();
-  diamond.matrix.translate(3, 2, 3);
-  diamond.matrix.rotate(g_seconds*30, 0, 1, 0);
-  diamond.matrix.translate(0, (Math.cos(g_seconds*Math.PI))*0.2, 0);
-  diamond.renderFast();
+  drawDiamonds(g_diamonds);
 
   var duration = performance.now() - startTime;
   sendTextToHTML( " ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
