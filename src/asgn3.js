@@ -171,9 +171,8 @@ function generateMaze(targetHeight, targetWidth) {
   const mazeHeight = Math.max(3, 2 * adjustedHeight + 1); // Ensure odd and at least 3
   const mazeWidth = Math.max(3, 2 * adjustedWidth + 1);   // Ensure odd and at least 3
 
-
-  // Initialize maze with walls (2)
-  const maze = Array(mazeHeight).fill(null).map(() => Array(mazeWidth).fill(2));
+  // Initialize maze with walls (1) - Changed to 1
+  const maze = Array(mazeHeight).fill(null).map(() => Array(mazeWidth).fill(1));
   const corridorCells = []; // Array to store coordinates of corridor cells
 
   function carvePath(y, x) {
@@ -187,7 +186,8 @@ function generateMaze(targetHeight, targetWidth) {
           const nextY = y + dy;
           const nextX = x + dx;
 
-          if (nextY > 0 && nextY < mazeHeight - 1 && nextX > 0 && nextX < mazeWidth - 1 && maze[nextY][nextX] === 2) {
+          // Wall check now against 1 - Changed to 1
+          if (nextY > 0 && nextY < mazeHeight - 1 && nextX > 0 && nextX < mazeWidth - 1 && maze[nextY][nextX] === 1) {
               maze[y + dy / 2][x + dx / 2] = 0; // Carve path between cells
               corridorCells.push([y + dy / 2, x + dx / 2]); // Add carved path cell as corridor
               carvePath(nextY, nextX); // Recursive call
@@ -220,6 +220,7 @@ function logMaze(maze) {
   for (let y = 0; y < maze.length; y++) {
       let rowStr = "";
       for (let x = 0; x < maze[y].length; x++) {
+          // Wall check now against 1 in logMaze too - Updated logMaze for clarity
           rowStr += maze[y][x] === 0 ? "  " : "* ";
       }
       console.log(rowStr);
