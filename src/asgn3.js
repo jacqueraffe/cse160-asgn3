@@ -6,10 +6,11 @@
 
 // NOTE FOR GRADER:
 // # cse160-asgn3
-// heavily referenced video playlist. and used Gemini
+// heavily referenced video playlist. and used Gemini AI studio
 
-// Wow!
 // Mine Maze: Try to find all the diamonds in the maze in the shortest time possible!
+// game element; walk through diamonds and watch your score go up!
+// wow factor: randomly generated maze
 
 
 var VSHADER_SOURCE =`
@@ -61,6 +62,7 @@ let u_ViewMatrix;
 let g_camera;
 let g_seconds;
 let g_startTime = performance.now()/1000.0;
+let g_map;
 
 function setupWebGL(){
     // Retrieve <canvas> element
@@ -72,7 +74,12 @@ function setupWebGL(){
       console.log('Failed to get the rendering context for WebGL');
       return;
     }
-    g_camera = new Camera(canvas, g_map);
+    let mazeResult = generateMaze(32, 32);
+    g_map = mazeResult.maze;
+    const pos = mazeResult.startPosition;
+    var eye = new Vector3([pos[1]-16, 1.75, pos[0]-16]);
+    logMaze(g_map);
+    g_camera = new Camera(canvas, g_map, eye);
     g_camera.updateViewMatrix();
 }
 
@@ -146,40 +153,79 @@ function connectVariablesToGLSL(){
 
 let g_score = 0;
 let g_globalAngle = 0;
-var g_map = [
-  [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],  
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-  [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],  
-];
+
+/*
+NOTE TO GRADER: used AI to generate maze generation code with prompt
+Write a generateMaze function that takes a height and width and returns a 2D array that is a maze.
+The values should be 0 for corridors. The corridors should be 2 wide. The cells that are walls 
+should be of value 2. There should be surrounding walls. Write this in javascript.
+Also, write a log maze into the function.
+*/
+
+function generateMaze(targetHeight, targetWidth) {
+  // Calculate adjusted height and width to get close to the target corridor dimensions
+  const adjustedHeight = Math.floor(targetHeight / 2); // Roughly half for corridors
+  const adjustedWidth = Math.floor(targetWidth / 2);   // Roughly half for corridors
+
+  // Ensure adjusted dimensions are at least 1 to avoid empty maze
+  const mazeHeight = Math.max(3, 2 * adjustedHeight + 1); // Ensure odd and at least 3
+  const mazeWidth = Math.max(3, 2 * adjustedWidth + 1);   // Ensure odd and at least 3
+
+
+  // Initialize maze with walls (2)
+  const maze = Array(mazeHeight).fill(null).map(() => Array(mazeWidth).fill(2));
+  const corridorCells = []; // Array to store coordinates of corridor cells
+
+  function carvePath(y, x) {
+      maze[y][x] = 0; // Mark current cell as corridor
+      corridorCells.push([y, x]); // Add corridor cell coordinates
+
+      const directions = [[0, 2], [0, -2], [2, 0], [-2, 0]]; // Possible directions to move (step of 2)
+      shuffleArray(directions); // Randomize direction order
+
+      for (const [dy, dx] of directions) {
+          const nextY = y + dy;
+          const nextX = x + dx;
+
+          if (nextY > 0 && nextY < mazeHeight - 1 && nextX > 0 && nextX < mazeWidth - 1 && maze[nextY][nextX] === 2) {
+              maze[y + dy / 2][x + dx / 2] = 0; // Carve path between cells
+              corridorCells.push([y + dy / 2, x + dx / 2]); // Add carved path cell as corridor
+              carvePath(nextY, nextX); // Recursive call
+          }
+      }
+  }
+
+  // Start carving path from a random cell inside the maze (odd indices to ensure corridors are 2 wide)
+  const startY = 1 + 2 * Math.floor(Math.random() * adjustedHeight);
+  const startX = 1 + 2 * Math.floor(Math.random() * adjustedWidth);
+
+  carvePath(startY, startX);
+
+  // Select a random starting position from the corridor cells
+  const startIndex = Math.floor(Math.random() * corridorCells.length);
+  const startPosition = corridorCells[startIndex];
+
+  return { maze, startPosition };
+}
+
+// Helper function to shuffle array (Fisher-Yates shuffle)
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function logMaze(maze) {
+  for (let y = 0; y < maze.length; y++) {
+      let rowStr = "";
+      for (let x = 0; x < maze[y].length; x++) {
+          rowStr += maze[y][x] === 0 ? "  " : "* ";
+      }
+      console.log(rowStr);
+  }
+}
+
 
 // x, z
 var g_diamonds = [];
@@ -259,12 +305,6 @@ function tick() {
   renderAllShapes();
   requestAnimationFrame(tick);
 }
-
-/*
-// TODO:
-2. maze gernation
-*/
-
 
 function drawDiamonds(diamonds) {
   var diamond = new Diamond();
