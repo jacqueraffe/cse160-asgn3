@@ -262,7 +262,6 @@ function tick() {
 
 /*
 // TODO:
-1. pick diamonds have them randomly generate (have counter of how many diamonds u have on html)
 2. maze gernation
 */
 
@@ -300,8 +299,8 @@ function drawMap(map) {
     }
 }
 function collectDiamonds(){
-  x = Math.floor(g_camera.eye.elements[0]);
-  z = Math.floor(g_camera.eye.elements[2]);
+  x = Math.floor(g_camera.target.elements[0]+0.5);
+  z = Math.floor(g_camera.target.elements[2]+0.5);
   for(var i = 0; i < g_diamonds.length; i++){
     if (g_diamonds[i][0] == x && g_diamonds[i][1] == z){
       g_score +=1
